@@ -2,7 +2,7 @@
 
 ![](https://github.com/dkow72/singstatdata/workflows/build/badge.svg) [![codecov](https://codecov.io/gh/dkow72/singstatdata/branch/main/graph/badge.svg)](https://codecov.io/gh/dkow72/singstatdata) ![Release](https://github.com/dkow72/singstatdata/workflows/Release/badge.svg) [![Documentation Status](https://readthedocs.org/projects/singstatdata/badge/?version=latest)](https://singstatdata.readthedocs.io/en/latest/?badge=latest)
 
-AnAn API client for Singstat time series data
+An API client for Singstat time series data
 
 ## Installation
 
