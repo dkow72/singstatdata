@@ -70,21 +70,31 @@ def get_resource_id(keyphrases=None, match_all=False):
         print('Failed to retrieve json file from Singstat')
         return
     
-    if len(json['records']) == 0:
-        print("No relevant datasets for given keyphrase")
-        return None
+    def no_returns_check(ids):
+        if len(ids) == 0:
+            raise ValueError("No relevant datasets for given keyphrase")
     
     # Extracting resourceIDs by filtering for presence of keyphrases in time series datasets
     if keyphrases == None:
-        return [list(dataset.values())[0] for dataset in json['records']]
+        ids = [list(dataset.values())[0] for dataset in json['records']]
+        no_returns_check(ids)
+        return ids
     if type(keyphrases) == str:
-        return [list(dataset.values())[0] for dataset in json['records'] if keyphrases.lower() in list(dataset.values())[1].lower()]
+        ids = [list(dataset.values())[0] for dataset in json['records'] if keyphrases.lower() in list(dataset.values())[1].lower()]
+        no_returns_check(ids)
+        return ids
+    
     elif type(keyphrases) == list:
         if match_all == False:
             regstr = '|'.join([keyphrase.lower() for keyphrase in keyphrases])
-            return [list(dataset.values())[0] for dataset in json['records'] if re.search(regstr, list(dataset.values())[1].lower())]
+            ids = [list(dataset.values())[0] for dataset in json['records'] if re.search(regstr, list(dataset.values())[1].lower())]
+            no_returns_check(ids)
+            return ids
+        
         else:
-            return [list(dataset.values())[0] for dataset in json['records'] if all(keyphrase.lower() in list(dataset.values())[1].lower() for keyphrase in keyphrases)]
+            ids = [list(dataset.values())[0] for dataset in json['records'] if all(keyphrase.lower() in list(dataset.values())[1].lower() for keyphrase in keyphrases)]
+            no_returns_check(ids)
+            return ids
 
 def check_resource_ids(resource_ids):
     if type(resource_ids) not in [int, list]:
@@ -380,7 +390,7 @@ class timeseries_search():
                 filtered_overview = self.overview
         
         elif type(frequency) == str:
-            assert freq in frequencies, "Frequencies must be chosen from: 'all', 'annual', 'quarterly', 'monthly', 'ad-hoc', 'half-yearly'"
+            assert frequency in frequencies, "Frequencies must be chosen from: 'all', 'annual', 'quarterly', 'monthly', 'ad-hoc', 'half-yearly'"
             if frequency != 'all':
                 filtered_overview = self.overview[self.overview['frequency'].str.lower() == frequency]
             else:
