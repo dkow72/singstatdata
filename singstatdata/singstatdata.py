@@ -359,9 +359,6 @@ class timeseries_search():
         
         NoneType 
           Updates the timeseries_search object
-
-        Example
-        -------
         """
         # Checking parameters
         if type(frequency) not in [str, list] or not all(isinstance(freq, str) for freq in frequency):
